@@ -36,6 +36,10 @@ type container struct {
 	callSiteValidator *CallSiteValidator
 }
 
+func (c *container) GetDescriptors() []*Descriptor {
+	return c.CallSiteFactory.Descriptors()
+}
+
 func (c *container) Get(serviceType reflect.Type) (any, error) {
 	return c.GetWithScope(serviceType, c.Root)
 }

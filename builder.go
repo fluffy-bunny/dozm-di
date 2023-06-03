@@ -142,9 +142,10 @@ func AddTransient[T any](cb ContainerBuilder, ctor any, implementedInterfaceType
 func AddTransientWithLookupKeys[T any](cb ContainerBuilder,
 	ctor any,
 	lookupKeys []string,
+	metadata map[string]interface{},
 	implementedInterfaceTypes ...reflect.Type) {
 	descriptor := Transient[T](ctor, implementedInterfaceTypes...)
-
+	descriptor.Metadata = metadata
 	for _, key := range lookupKeys {
 		hKey := hashTypeAndString(descriptor.ServiceType, key)
 		descriptor.LookupKeys = append(descriptor.LookupKeys, hKey)
@@ -174,9 +175,10 @@ func AddScoped[T any](cb ContainerBuilder, ctor any, implementedInterfaceTypes .
 func AddScopedWithLookupKeys[T any](cb ContainerBuilder,
 	ctor any,
 	lookupKeys []string,
+	metadata map[string]interface{},
 	implementedInterfaceTypes ...reflect.Type) {
 	descriptor := Scoped[T](ctor, implementedInterfaceTypes...)
-
+	descriptor.Metadata = metadata
 	for _, key := range lookupKeys {
 		hKey := hashTypeAndString(descriptor.ServiceType, key)
 		descriptor.LookupKeys = append(descriptor.LookupKeys, hKey)
@@ -205,9 +207,10 @@ func AddSingleton[T any](cb ContainerBuilder, ctor any, implementedInterfaceType
 func AddSingletonWithLookupKeys[T any](cb ContainerBuilder,
 	ctor any,
 	lookupKeys []string,
+	metadata map[string]interface{},
 	implementedInterfaceTypes ...reflect.Type) {
 	descriptor := Singleton[T](ctor, implementedInterfaceTypes...)
-
+	descriptor.Metadata = metadata
 	for _, key := range lookupKeys {
 		hKey := hashTypeAndString(descriptor.ServiceType, key)
 		descriptor.LookupKeys = append(descriptor.LookupKeys, hKey)
@@ -236,9 +239,10 @@ func AddInstance[T any](cb ContainerBuilder, instance any, implementedInterfaceT
 func AddInstanceWithLookupKeys[T any](cb ContainerBuilder,
 	instance any,
 	lookupKeys []string,
+	metadata map[string]interface{},
 	implementedInterfaceTypes ...reflect.Type) {
 	descriptor := Instance[T](instance, implementedInterfaceTypes...)
-
+	descriptor.Metadata = metadata
 	for _, key := range lookupKeys {
 		hKey := hashTypeAndString(descriptor.ServiceType, key)
 		descriptor.LookupKeys = append(descriptor.LookupKeys, hKey)

@@ -18,6 +18,9 @@ type ContainerEngineScope struct {
 	disposables      []Disposable
 }
 
+func (c *ContainerEngineScope) GetDescriptors() []*Descriptor {
+	return c.RootContainer.GetDescriptors()
+}
 func (s *ContainerEngineScope) Get(serviceType reflect.Type) (any, error) {
 	if s.disposed {
 		return nil, &errorx.ObjectDisposedError{Message: reflectx.TypeOf[Container]().String()}
