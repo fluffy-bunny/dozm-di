@@ -10,6 +10,7 @@ import (
 
 type Container interface {
 	Get(reflect.Type) (any, error)
+	GetDescriptors() []*Descriptor
 	GetByLookupKey(reflect.Type, string) (any, error)
 }
 

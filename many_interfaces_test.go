@@ -84,12 +84,12 @@ func AddSingletonEmployeesWithLookupKeys(b ContainerBuilder) {
 	AddSingletonWithLookupKeys[*employee](b,
 		func() *employee {
 			return &employee{Name: "1"}
-		}, []string{"1"},
+		}, []string{"1"}, map[string]interface{}{"name": "1"},
 		reflect.TypeOf((*IEmployee)(nil)))
 	AddSingletonWithLookupKeys[*employee](b,
 		func() *employee {
 			return &employee{Name: "2"}
-		}, []string{"2"},
+		}, []string{"2"}, map[string]interface{}{"name": "2"},
 		reflect.TypeOf((*IEmployee)(nil)))
 }
 func AddTransientEmployeesWithLookupKeys(b ContainerBuilder) {
@@ -97,31 +97,35 @@ func AddTransientEmployeesWithLookupKeys(b ContainerBuilder) {
 		func() *employee {
 			return &employee{Name: "1"}
 		}, []string{"1"},
+		map[string]interface{}{"name": "1"},
 		reflect.TypeOf((*IEmployee)(nil)))
 	AddTransientWithLookupKeys[*employee](b,
 		func() *employee {
 			return &employee{Name: "2"}
 		}, []string{"2"},
+		map[string]interface{}{"name": "2"},
 		reflect.TypeOf((*IEmployee)(nil)))
 }
 func AddInstanceEmployeesWithLookupKeys(b ContainerBuilder) {
 	AddInstanceWithLookupKeys[*employee](b,
 		&employee{Name: "1"}, []string{"1"},
+		map[string]interface{}{"name": "1"},
 		reflect.TypeOf((*IEmployee)(nil)))
 	AddInstanceWithLookupKeys[*employee](b,
 		&employee{Name: "2"}, []string{"2"},
+		map[string]interface{}{"name": "2"},
 		reflect.TypeOf((*IEmployee)(nil)))
 }
 func AddScopedHandlersWithLookupKeys(b ContainerBuilder) {
 	AddScopedWithLookupKeys[*handler](b,
 		func() *handler {
 			return &handler{path: "1"}
-		}, []string{"1"},
+		}, []string{"1"}, map[string]interface{}{"name": "1"},
 		reflect.TypeOf((*IHandler)(nil)))
 	AddScopedWithLookupKeys[*handler](b,
 		func() *handler {
 			return &handler{path: "2"}
-		}, []string{"2"},
+		}, []string{"2"}, map[string]interface{}{"name": "2"},
 		reflect.TypeOf((*IHandler)(nil)))
 }
 
@@ -307,7 +311,19 @@ func TestManyWithScopeWithLookupKeys(t *testing.T) {
 	c := b.Build()
 	scopeFactory := Get[ScopeFactory](c)
 	scope1 := scopeFactory.CreateScope()
-	handlers := Get[[]IHandler](scope1.Container())
+	ctn := scope1.Container()
+	descriptors := ctn.GetDescriptors()
+	require.Equal(t, 2, len(descriptors))
+	for _, d := range descriptors {
+		require.NotEmpty(t, d.Metadata)
+		_, ok := d.Metadata["name"]
+		require.True(t, ok)
+		_, ok = d.Metadata["name"].(string)
+		require.True(t, ok)
+
+		fmt.Println(d)
+	}
+	handlers := Get[[]IHandler](ctn)
 	require.Equal(t, 2, len(handlers))
 	require.NotPanics(t, func() {
 		h := GetByLookupKey[IHandler](c, "1")

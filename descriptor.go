@@ -50,6 +50,7 @@ type Descriptor struct {
 	Factory                   func(Container) any
 	ImplementedInterfaceTypes []reflect.Type
 	LookupKeys                []string
+	Metadata                  map[string]interface{}
 }
 
 func (d *Descriptor) String() string {
