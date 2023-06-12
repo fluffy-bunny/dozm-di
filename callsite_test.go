@@ -161,7 +161,7 @@ func TestCallSiteFactory_EmptySlice(t *testing.T) {
 }
 
 func Shuffle[T any](s []T) {
-	rand.Seed(time.Now().UTC().UnixNano())
+	rand.New(rand.NewSource(time.Now().UTC().UnixNano()))
 	rand.Shuffle(len(s), func(i, j int) { s[i], s[j] = s[j], s[i] })
 }
 
